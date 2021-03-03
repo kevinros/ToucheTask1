@@ -30,17 +30,22 @@ def tokenizeWordSpacy(text, removePunct=True, lower=True, minLength=2):
     words = [token.text for token in doc if len(token.text) > min_length]
     return words
 
-def tokenizeSentenceSpacy(text):
+def tokenizeSentenceSpacy(text, removePunct="[\[\]\"]", minLength=20):
     """
     Uses spacy model to extract sentences from the text
     :param text: text to be processed
     :type text: str
+    :param removePunct: regular expression of punct to remove
+    :type removePunct: str
+    :param minLength: the shortest sentence (characters) allowed
+    :type minLength: int
 
     :rtype: list of strings
     :returns: list of sentences
     """
+    text = re.sub(removePunct, "", text)
     doc = nlp(text)
-    sentences = [sent.string.strip() for sent in doc.sents]
+    sentences = [sent.string.strip() for sent in doc.sents if len(sent) > minLength]
     return sentences
 
 def createSentences(text):
